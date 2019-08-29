@@ -1,0 +1,80 @@
+{
+  "name": "WireGuard",
+  "version": "dev",
+  "slug": "wireguard",
+  "description": "Fast, modern, secure VPN tunnel",
+  "url": "https://github.com/hassio-addons/addon-wireguard",
+  "startup": "application",
+  "arch": [
+    "aarch64",
+    "amd64",
+    "armhf",
+    "armv7",
+    "i386"
+  ],
+  "ports": {
+    "80/tcp": null,
+    "51820/udp": 51820
+  },
+  "ports_description": {
+    "80/tcp": "WireGuard peers status API",
+    "51820/udp": "WireGuard: forward this port in your router"
+  },
+  "boot": "auto",
+  "hassio_api": true,
+  "hassio_role": "default",
+  "privileged": [
+    "NET_ADMIN"
+  ],
+  "devices": [
+    "/dev/net/tun:/dev/net/tun:rwm"
+  ],
+  "map": [
+    "config",
+    "ssl:rw"
+  ],
+  "options": {
+    "server": {
+      "host": "hassio.local",
+      "addresses": [
+        "172.244.66.1"
+      ],
+      "dns": []
+    },
+    "peers": [
+        {
+          "name": "hassio",
+          "addresses": [
+            "172.244.66.2"
+          ],
+          "allowed_ips": [],
+          "client_allowed_ips": []
+        }
+    ]
+  },
+  "schema": {
+    "log_level": "match(^(trace|debug|info|notice|warning|error|fatal)$)?",
+    "server": {
+      "host": "str",
+      "addresses": ["str"],
+      "dns": ["str"],
+      "private_key": "str?",
+      "public_key": "str?",
+      "post_up": "str?",
+      "post_down": "str?"
+    },
+    "peers": [
+      {
+        "name": "match(^[a-zA-Z0-9\\d](?:[a-zA-Z0-9\\d]|-(?=[a-zA-Z0-9\\d])){0,32}$)",
+        "private_key": "str?",
+        "public_key": "str?",
+        "addresses": ["str"],
+        "allowed_ips": ["str"],
+        "client_allowed_ips": ["str"],
+        "persistent_keep_alive": "int?",
+        "endpoint": "str?",
+        "pre_shared_key": "str?"
+      }
+    ]
+  }
+}
